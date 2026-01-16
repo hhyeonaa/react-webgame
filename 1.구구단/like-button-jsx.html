@@ -11,6 +11,16 @@
 <script type="text/babel">
   'use strict';
 
+  // 함수 컴포넌트 -> this 사용 X
+  // function LikeButton() {
+  //     const [liked, setLiked] = React.userState(false);  // 구조분해
+  //     if(liked) {
+  //         return 'You liked this.';
+  //     return (
+  //         <button onClick = {() => { setLiked(true); }}>Like</button>
+  //     );
+  // }
+
   class LikeButton extends React.Component {
     constructor(props) {
       super(props);
@@ -23,15 +33,84 @@
       }
 
       return (
-        <button onClick={() => this.setState({liked: true})}>
-          Like
+        // <button onClick={() => {this.state.liked = true; }}>Like</button>  -> 객체값
+        <button onClick={() => {
+            // this.stata.liked = true;
+            this.setState({liked: true});
+            }} obj={{a: 'b', c: 'd'}}>
+            {this.state.liked ? 'Liked' : 'Like'}
+            {[1, 2, 3].map(i => {
+                return <div key={i}>{i}</div>;
+            })}
         </button>
       );
+      // babel 라이브러리 적용 시, type="text/babel"인 스크립트 태그 내의 JSX 코드를 아래 형태로 변환해줌.
+      // JSX 내부 html 코드는 무조건 소문자로 작성해야 하며, 닫는 태그 꼭 명시해야 함. ex) <input type="text" />
+      // 자바스크립트 부분은 중괄호({})꼭 명시 필요!  ex) onClick= "{"~~~"}", (객체 형태) obj="{"{a: 'b', c: 'd'}"}"
+      // 리턴은 태그가 하나만 와야 함. 만약 위에 <input>도 함께 리턴하고 싶다면 바깥에 <div> 태그로 감싸준 형태로 리턴시킴.
+      // return React.createElement('button', {onClick: () => this.setState({liked: true})}, 'Like');
     }
   }
+
+
+  // 최근은 클래스 컴포넌트 대신 Hooks 사용하는 추세(함수형과 유사)
+  const Gugudan = () => {
+      // state 선언 방식
+      const [first, setFirst] = React.useState(Math.floor(Math.random() * 9));
+      const [second, setSecond] = React.useState(Math.floor(Math.random() * 9));
+      const [value, setValue] = React.useState('');
+      const [result, setResult] = React.useState('');
+      const inputRef = React.useRef(null);
+
+      const onChangeInput = (e) => {
+          setValue(e.target.value);
+      };
+
+      const onSubmitForm = (e) => {
+          this.preventDefault();
+          if(parseInt(value) === first * second) {
+              setResult('정답: ' + value);
+              setFirst(Math.floor(Math.random() * 9));
+              setSecond(Math.floor(Math.random() * 9));
+              setValue('');
+              inputRef.current.focus();
+          } else {
+              setResult('땡');
+              setValue('');
+              inputRef.current.focus();
+          }
+      }
+
+      return (<React.Fragment>
+          {first} 곱하기 {second}는?
+          <form onSubmit={onSubmitForm}>
+              <input type="number" ref={inputRef} onChange={onChangeInput} value={value} />
+              <button>입력!</button>
+          </form>
+          <div id="result">{result}</div>
+      </React.Fragment>);
+  }
+
 </script>
 <script type="text/babel">
-  ReactDOM.render(<LikeButton/>, document.querySelector('#root'));
+  ReactDOM.render(<LikeButton/>, document.querySelector('#root'));              // React ver.17
+  ReactDOM.render(                                                              // 컴포넌트 여러 번 사용 가능
+      <div>
+          <LikeButton/>
+          <LikeButton/>
+          <LikeButton/>
+          <LikeButton/>
+      </div>
+      , document.querySelector('#root'));
+  // ReactDOM.createRoot(document.querySelector('#root')).render(<LikeButton/>);   // React ver.18(현재 PC에서는 호환 X)
+  // ReactDOM.createRoot(document.querySelector('#root')).render(                  // 컴포넌트 여러 번 사용 가능
+  //     <div>
+  //         <LikeButton/>
+  //         <LikeButton/>
+  //         <LikeButton/>
+  //         <LikeButton/>
+  //     </div>
+  // );
 </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 const path = require('path');
+// procss.env.NODE_ENV = 'development';   // 배포 모드
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
@@ -23,7 +24,10 @@ module.exports = {
           }],
           '@babel/preset-react',
         ],
-        plugins: ['react-refresh/babel'],
+        plugins: [
+          '@babel/plugin-proposal-class-properties',
+          'react-refresh/babel'
+        ],
       },
       exclude: path.join(__dirname, 'node_modules'),
     }],

@@ -3,18 +3,19 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 
 module.exports = {
   name: 'word-relay-dev',
-  mode: 'development',
+  mode: 'development',  // 실서비스 : production
   devtool: 'inline-source-map',
-  resolve: {
+  resolve: {  // entry > app의 'client.js', 'client.jsx'를 찾아줌 (확장자 생략용)
     extensions: ['.js', '.jsx'],
   },
-  entry: {
+  entry: {  // 웹팩 설정 입력
+    // app: ['./client.jsx', './client.js', './csafwf.css', './qwmrkqr.json'],
     app: './client',
   },
   module: {
     rules: [{
-      test: /\.jsx?$/,
-      loader: 'babel-loader',
+      test: /\.jsx?$/,        // 바벨 적용
+      loader: 'babel-loader', // 바벨 적용
       options: {
         presets: [
           ['@babel/preset-env', {
@@ -31,9 +32,10 @@ module.exports = {
   plugins: [
     new ReactRefreshWebpackPlugin(),
   ],
-  output: {
+  output: { // 웹팩 설정 출력
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
+    // filename: '[name].js',
+    filename: 'app.js',
     publicPath: '/dist',
   },
   devServer: {

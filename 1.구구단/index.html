@@ -2,9 +2,108 @@
 <head>
     <meta charset="UTF-8"/>
     <title>구구단</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body>
 <div id="root"></div>
-<script src="/dist/app.js"></script>
+<!--<script src="/dist/app.js"></script>-->
+<script type="text/babel">
+    class GuGuDDan extends React.Component {
+        // constructor(props) {        // constructor, super 생략 가능
+        //     super(props);
+        //     this.state = {
+            state = {
+                first : Math.ceil(Math.random() * 9),
+                second : Math.ceil(Math.random() * 9),
+                value : '',
+                result : '',
+            };
+        // }
+
+        // 이쪽에선 무조건 화살표 함수 사용해야 하며, function는 사용 불가
+        onSubmit = (e) => {
+            e.preventDefault();
+            if(parseInt(this.state.value) === this.state.first * this.state.second) {
+                // Hooks 코드
+                // setResult('정답');
+                // setFirst(Math.ceil(Math.random() * 9));
+                // setSecond(Math.ceil(Math.random() * 9));
+                // setValue('');
+                // inputEl.current.focus();
+
+                // this.setState({
+                //     result : this.state.first + ' * ' + this.state.second + ' = ' + this.state.value + ' 정답',
+                //     first : Math.ceil(Math.random() * 9),
+                //     second : Math.ceil(Math.random() * 9),
+                //     value : '',
+                // })
+
+
+                this.setState({
+                    value : this.state.value + 1,
+                });
+                this.setState({
+                    value : this.state.value + 1,
+                });
+                this.setState({
+                    value : this.state.value + 1,
+                });
+                // 비동기 방식(논블로킹)으로 인해 전체적으로 value + 3이 아닌 value + 1로 인식될 수가 있음.
+                this.setState((preState) => {
+                    // 이를 방지하기 위해 함수에 return하는 함수를 통해서 preState 이용하여 +3이 되도록 만들 수 있음.
+                    // return {value : preState.value + 1};
+                    return {
+                        result : this.state.first + ' * ' + this.state.second + ' = ' + this.state.value + ' 정답',
+                        first : Math.ceil(Math.random() * 9),
+                        second : Math.ceil(Math.random() * 9),
+                        value : '',
+                    };
+                });
+                this.input.focus();
+            } else {
+                // Hooks 코드
+                // setResult('땡');
+                // setValue('');
+                // inputEl.current.focus();
+
+                this.setState({
+                    result : '땡',
+                    value : '',
+                })
+            }
+        }
+
+        onChange = (e) => {
+            this.setState({value: e.target.value});
+        };
+
+        input;
+
+        // 컨텐츠
+        render() {
+            return(
+                <React.Fragment>
+                    <div>{this.state.first} 곱하기 {this.state.second}는?</div>
+                    <form onSubmit={this.onSubmit}>
+                        <input ref={(c) => {this.input = c;}} type="number" value={this.state.value} onChange={this.onChange} />
+                        <button>입력!</button>
+                    </form>
+                    <div>{this.state.result}</div>
+                </React.Fragment>
+            );
+        }
+    }
+</script>
+<script type="text/babel">
+    // ReactDOM.render(<GuGuDDan/>, document.querySelector('#root'));
+    ReactDOM.render(                                      // 여러 개 생성 시
+        <div>
+            <GuGuDDan/>
+            <GuGuDDan/>
+            <GuGuDDan/>
+        </div>, document.querySelector('#root'));
+</script>
 </body>
 </html>
